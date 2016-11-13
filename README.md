@@ -1,3 +1,5 @@
 # operacao-lista
 
-ver 1
+Master
+
+Sem menu
