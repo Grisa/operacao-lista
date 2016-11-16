@@ -6,36 +6,6 @@
 
 /*USEM TRUE E FALSE USEM TRUE E FALSE USEM TRUE E FALSE USEM TRUE E FALSE USEM TRUE E FALSE*/
 
-void menu() {
-	int op = 0;
-
-	do
-	{
-		printf("\n\n");
-		printf("SEJA BEM VINDO AO VAI TOMAR NO SEU CU,digite a opção que deseja fdp\n");
-		printf("\nDigite 0 para sair\n");
-		printf("Digite 1 para adicionar um numero à lista\n");
-		printf("Digite 2 para ver o maior numero\n");
-		printf("Digite 3 para ver o menor numero\n");
-	} while (op == TRUE);
-
-	scanf("%d", &op);
-
-	switch (op) {
-		case 0:
-			exit(0);
-			break;
-		case 1:
-			system("cls");			
-			break;
-		default:
-			system("cls");
-			menu();
-			break;
-	}
-}
-
-
 void mostrafloat(void *k) {
 	printf("%d", *(int*)k);	
 }
@@ -53,17 +23,28 @@ int main() {
 	
 	/*Criar uma multilista como ponteiro
 	
-	Cada nó de LISTA_PRINCIPAL aponta para outra lista que contém os nums
+	Cada nÃ³ de LISTA_PRINCIPAL aponta para outra lista que contÃ©m os nums
 
 	*/
 
-	LDE *LISTA_PRINCIPAL = malloc(sizeof(LDE));
+	LDE *principal = malloc(sizeof(LDE));
 
-	IniciaLista(LISTA_PRINCIPAL, sizeof(LDE));
+	IniciaLista(principal, sizeof(LDE));
 
+	for (int i = 0; i < 4; i++)
+	{
+		LDE *sub = malloc(sizeof(LDE));
+		IniciaLista(sub, sizeof(LDE));
 
+		char numero[1000];
+		scanf("%s", numero);
+		inicializa_numero(sub,numero);
+		insereFim(principal, sub);		
+		mostraLista(sub, mostra_int);
+		printf("\n");
+	}
 	
-	menu();
+	
 	printf("\n");
 	system("pause");
 
