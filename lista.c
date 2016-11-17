@@ -8,6 +8,7 @@
 void IniciaLista(LDE *l, int t) {
 	l->tamInfo = t;
 	l->cabeca = NULL;
+	l->quantidade_elementos = 0;
 }
 
 ElementoDuplo *aloca_elemento(void *info, int tamInfo) {
@@ -31,6 +32,7 @@ int insereInicio(LDE *l, void *info) {
 	l->cabeca = p;
 
 	if (p->proximo != NULL) p->proximo->ant = p;
+	l->quantidade_elementos++;
 	return 1;
 }
 
@@ -49,6 +51,8 @@ int insereFim(LDE *l, void *info) {
 	p->proximo = novo;
 	novo->proximo = NULL;
 	novo->ant = p;
+
+	l->quantidade_elementos++;
 	return 1;
 }
 
@@ -77,6 +81,7 @@ int inserePosicao(LDE *l, void *info, int posicao) {
 	if (novo->proximo != NULL)
 		novo->proximo->ant = novo;
 
+	l->quantidade_elementos++;
 	return 1;
 }
 
@@ -103,7 +108,7 @@ int removePosicao(LDE *l, void *info, int posicao) {
 
 	if (p->proximo == NULL) return ERRO_POSICAO_INVALIDA;
 
-	
+
 
 	ElementoDuplo *x = p->proximo;
 	p->proximo = x->proximo;
@@ -115,12 +120,12 @@ int removePosicao(LDE *l, void *info, int posicao) {
 	free(x->info);
 	free(x);
 
-
+	l->quantidade_elementos--;
 
 }
 int removeInicio(LDE *l, void *info) {
 	if (ListaVazia(l))
-		return ERRO_LISTAVAZIA;
+		return ERRO_LISTA_VAZIA;
 
 	ElementoDuplo *p = l->cabeca;
 	l->cabeca = p->proximo;
@@ -132,11 +137,12 @@ int removeInicio(LDE *l, void *info) {
 
 	if (l->cabeca != NULL) //ou if(lista_vazia)
 		l->cabeca->ant = NULL;
+	l->quantidade_elementos--;
 	return 1;
 }
 
 int removeFim(LDE *l, void *info) {
-	if (ListaVazia(l)) return ERRO_LISTAVAZIA;
+	if (ListaVazia(l)) return ERRO_LISTA_VAZIA;
 
 	if (l->cabeca->proximo == NULL) //so 1 elemento;
 		return removeInicio(l, info);
@@ -152,25 +158,25 @@ int removeFim(LDE *l, void *info) {
 	free(p->proximo->info);
 	free(p->proximo);
 	p->proximo = NULL;
-
+	l->quantidade_elementos--;
 	return 1;
 }
 
-void mostraLista(LDE *l, void(*mostra)(void*)) {
+void mostraLista(LDE *l,void(*mostra)(void*)) {
 	if (ListaVazia(l))
 		printf("Lista vazia!");
 	else {
 		ElementoDuplo *p = l->cabeca;
 		printf("Dados da lista: \n");
 		while (p != NULL) {
-			mostra(p->info);
+			mostra(p->info,l);
 			p = p->proximo;
 		}
 	}
 }
 
 int limpa_lista(LDE *l) {
-	if (ListaVazia(l)) return ERRO_LISTAVAZIA;
+	if (ListaVazia(l)) return ERRO_LISTA_VAZIA;
 
 	ElementoDuplo *p = l->cabeca;
 
@@ -181,7 +187,8 @@ int limpa_lista(LDE *l) {
 		l->cabeca = prox;
 		p = prox;
 	}
-
+	l->quantidade_elementos = 0;
+	return 1;
 }
 
 int leNaPosicao(LDE *l, void *info, int posicao) {
