@@ -5,9 +5,6 @@
 #include "op_lista.h"
 
 
-void mostra_int(void *k) {
-    printf("%d", *(int*)k);
-}
 
 int main() {
 
@@ -37,7 +34,7 @@ int main() {
 		IniciaLista(sub, sizeof(LDE));		
 		leNaPosicao(principal, sub, i);
 		insereFim(principal, sub);
-		mostraLista(sub, mostra_int);
+		//mostraLista(sub, mostra_int);
 		printf("\n");
 	}
 	printf("\n");

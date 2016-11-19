@@ -4,8 +4,6 @@
 #include <string.h>
 #include <ctype.h>
 
-int sobra = 0;
-
 
 int verifica_caracteres(char *num)
 {
@@ -27,88 +25,71 @@ int verifica_caracteres(char *num)
 
 LDE *adiciona(LDE *l1,int pos1,int pos2){
 	
-	/*Chegar até o final da L1 e L2 recursivamente para fazer uma pilha implicita
+	/*Chegar até o final da L1 e L2 - OK
 
-	igualar numero de digitos inserindo 0 no começo
+	igualar numero de digitos inserindo 0 no começo - OK
 
-	adicionar info das listas junto com sobra
+	adicionar info das listas junto com sobra - incompleto
 
-	criar um Elemento para cada soma de l1 e l2 (junto com a sobra) e inserir no inicio da lista;
+	criar um Elemento para cada soma de l1 e l2 (junto com a sobra) e inserir no inicio da lista; - Incompleto
 	*/
+	LDE *A = malloc(sizeof(LDE));
+	LDE *B = malloc(sizeof(LDE));
 
-	ElementoDuplo *temp = l1->cabeca;
+	IniciaLista(A, sizeof(int));
+	IniciaLista(B, sizeof(int));
 
-	/*Chegar até a primeira posição para ser somada*/
-	for (int i = 0; i < pos1; i++)
+	leNaPosicao(l1, A, pos1);
+	leNaPosicao(l1, B, pos2);
+
+	/*Pegar a diferença de digitos entre as listas e adicionar zero no começo da lista menor*/
+	int dif = A->quantidade_elementos - B->quantidade_elementos;
+	if (dif < 0) dif = dif * -1;
+
+	
+	for (int i = 0;i < dif;i++)
 	{
-		if (temp->proximo != NULL) temp = temp->proximo;
-	}
-
-	int x[2]; /*Gambiarra para guardar a qtd de numeros das 2 listas,funciona?Claro.Ta feio ? foda-se*/
-
-	for (int i = pos1; i <= pos2; i++){
-		LDE *sub = malloc(sizeof(LDE));
-		leNaPosicao(l1, sub, i);
-		
-		if(i == pos1)
-		 x[0] = sub->quantidade_elementos;
-		if (i == pos2)
-	     x[1] = sub->quantidade_elementos;
-	}
-
+		if (A->quantidade_elementos > B->quantidade_elementos) 
+		     { int info = 0; insereInicio(B, &info); }
+		else 
+		     { int info = 0; insereInicio(A, &info); }
+	}	
 	
-	int dif = 0; 
-	/* Pegar a diferença entre a quantidade de numeros nas listas
-	   Testar se uma lista está vazia                          */
+    /*Criar a lista resultante*/
 
-//	if (x[0] || x[1] == 0) return ERRO_LISTA_VAZIA;
+	LDE *lista_resultante = malloc(sizeof(LDE));
+	IniciaLista(lista_resultante, sizeof(LDE));	
 	
-
-	if (x[0] > x[1]) {
-		dif = x[0] - x[1];
+	ElementoDuplo *p = A->cabeca;	//A = pos1, B = pos2
+	ElementoDuplo *z = B->cabeca;	
+	
+	//chegar no ultimo elemento de cada lista
+	while ((p->proximo != NULL) && (z->proximo != NULL))
+	{			
+		p = p->proximo;
+		z = z->proximo;		
 	}
-	else {
-		dif = x[0] - x[1];
-		dif *= -1; // -1 para deixar o número positivx
-	}
-
-	printf("dif %d\n", dif);
-	/*Adicionar os zeros no começo da lista menor*/
-
-	if (x[0] > x[1]) {
-		int i = 0;
 		
-		for (i = pos1; i <= pos2; i++) {
-			LDE *sub = malloc(sizeof(LDE));
-			leNaPosicao(l1, sub, i);			
-			if (i == pos2) {
-				for (int j = 0; j < dif; j++)
-				{
-					int a = 0;
-					inserePosicao(sub, &a,1);
-				}
-				
-			}
+	//somar de tras para frente e add na resultante
+	int sobra_soma, soma = 0;
+
+	while ((p != NULL) && (z != NULL)) //incompleto
+	{
+		int a, b, x = 0;
+		memcpy(&a, p->info, sizeof(int));
+		memcpy(&b, z->info, sizeof(int));
+
+		x = a + b;
+		if (x >= 10) {
+			x -= 10;
 		}
-	}
-
-	else {		
-			int i = 0;
-
-			for (i = pos1; i <= pos2; i++) {
-				LDE *sub = malloc(sizeof(LDE));
-				leNaPosicao(l1, sub, i);
-				if (i == pos1) {
-					for (int j = 0; j < dif; j++)
-					{
-						int a = 0;
-						inserePosicao(sub, &a, 1);
-					}
-				}
-			}
-		}
-	}
-
+		insereInicio(lista_resultante, &x);		
+		z = z->ant;
+		p = p->ant;
+	}		
+	
+	return lista_resultante;
+}
 
 LDE *multiplica(LDE * l1, LDE * l2){
 

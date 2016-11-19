@@ -3,6 +3,9 @@
 #include <string.h>
 #include "lista.h"
 
+void mostra_int(void *k) {
+	printf("%d", *(int*)k);
+}
 
 
 void IniciaLista(LDE *l, int t) {
@@ -32,6 +35,7 @@ int insereInicio(LDE *l, void *info) {
 	l->cabeca = p;
 
 	if (p->proximo != NULL) p->proximo->ant = p;
+	p->ant = NULL;
 	l->quantidade_elementos++;
 	return 1;
 }

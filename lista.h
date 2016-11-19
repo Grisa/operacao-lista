@@ -14,7 +14,7 @@ typedef struct {
 	int quantidade_elementos;
 }LDE;
 
-
+void mostra_int(void *k);
 int limpa_lista(LDE *l);
 int removeFim(LDE *l, void *info);
 void IniciaLista(LDE *l, int t);
