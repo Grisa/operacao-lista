@@ -25,6 +25,9 @@ int verifica_caracteres(char *num)
 
 LDE *adiciona(LDE *l1,int pos1,int pos2){
 	
+	if (pos1 == pos2) return ERRO_POSICAO_INVALIDA;
+	if ((pos1 < 0) || (pos2 < 0)) return ERRO_POSICAO_INVALIDA;
+
 	/*Chegar até o final da L1 e L2 - OK
 
 	igualar numero de digitos inserindo 0 no começo - OK
@@ -41,6 +44,11 @@ LDE *adiciona(LDE *l1,int pos1,int pos2){
 
 	leNaPosicao(l1, A, pos1);
 	leNaPosicao(l1, B, pos2);
+
+	if (A->quantidade_elementos == 0 || B->quantidade_elementos == 0) {
+		puts("Alguma lista esta vazia ou invalida");
+		return ERRO_LISTA_VAZIA;
+	}
 
 	/*Pegar a diferença de digitos entre as listas e adicionar zero no começo da lista menor*/
 	int dif = A->quantidade_elementos - B->quantidade_elementos;
@@ -72,22 +80,43 @@ LDE *adiciona(LDE *l1,int pos1,int pos2){
 		
 	//somar de tras para frente e add na resultante
 	int sobra_soma, soma = 0;
+	int a, b = 0;
 
-	while ((p != NULL) && (z != NULL)) //incompleto
+	while ((p != NULL) && (z != NULL))
 	{
-		int a, b, x = 0;
+	    
 		memcpy(&a, p->info, sizeof(int));
 		memcpy(&b, z->info, sizeof(int));
 
-		x = a + b;
-		if (x >= 10) {
-			x -= 10;
+		soma = a + b;
+			
+		if (soma < 10) {
+			insereInicio(lista_resultante, &soma);
 		}
-		insereInicio(lista_resultante, &x);		
+	
+		else {
+			sobra_soma = soma - 10;			
+			insereInicio(lista_resultante, &sobra_soma);	
+
+			if (z->ant != NULL) {
+				int zant = 0;
+				memcpy(&zant, z->ant->info, sizeof(int));
+				int adc = 1 + zant;
+				memcpy(z->ant->info, &adc, sizeof(int));
+			}
+						
+			else {  			
+				soma = 1;
+				insereInicio(lista_resultante, &soma);
+			}
+		}
+		
 		z = z->ant;
 		p = p->ant;
 	}		
 	
+	printf("\nSoma das listas %d e %d\n", pos1+1, pos2+1);
+	mostraLista(lista_resultante, mostra_int);
 	return lista_resultante;
 }
 
